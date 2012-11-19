@@ -40,7 +40,7 @@
 
 Route::get('/', array('as' => 'new', 'do' => function ()
 {
-	return View::make('new')->with('fork', '');
+	return View::make('editor')->with('content', ' ')->with('save', 'Save');
 }));
 
 /*
@@ -81,21 +81,6 @@ Route::get('(:any)/raw', array('as' => 'raw', 'do' => function ($id)
 	return Response::error('404');
 }));
 
-/*
-|--------------------------------------------------------------------------
-| Fork an existing paste...
-|--------------------------------------------------------------------------
-*/
-
-Route::get('(:any)/fork', array('as' => 'fork', 'do' => function ($id)
-{
-	if ( ! is_null($paste = Paste::find($id = Math::to_base_10($id))))
-	{
-		return View::make('new')->with('fork', $paste->paste);
-	}
-
-	return Response::error('404');
-}));
 
 /*
 |--------------------------------------------------------------------------
@@ -112,8 +97,10 @@ Route::get('(:any)', array('as' => 'paste', 'do' => function ($id)
 		return Response::error('404');
 	}
 
-	return View::make('view')->with('paste', htmlentities($paste->paste))
-						    ->with('id', $id);
+	return View::make('editor')
+							->with('content', htmlentities($paste->paste))
+						    ->with('id', $id)
+						    ->with('save', 'Save As');
 }));
 
 /*
