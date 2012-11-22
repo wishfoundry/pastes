@@ -171,16 +171,16 @@
   	    	<h1><a href="http://laravel.com">Laravel</a></h1>
   	    	<ul>
   	    		<li><a href="/">New</a></li>
-  	    		<li><a href="javascript: createPaste()" id="save">{{ $save }}</a></li>
+  	    		<li><a href="javascript: createPaste()" id="save"><?php echo  $save ; ?></a></li>
   	    		<li><a href="http://laravel.com/api/">API Docs</a></li>
   	    	</ul>
   	    </nav>
   	    <div id="tool-cont">
   	    	<section id="toolbar">
 	  	    	<ul>
-	  	    		@if ( $save == 'Save As' )
-					<li><a href="/{{ $id }}/raw">View Raw</a></li>
-					@endif
+	  	    		<?php if ( $save == 'Save As' ): ?>
+					<li><a href="/<?php echo  $id ; ?>/raw">View Raw</a></li>
+					<?php endif; ?>
 	  	    		<li><a href="javascript: nextKey()" id="key">keys: default</a></li>
 	  	    		<li><a href="javascript: nextMode()" id="syntax">mode: php</a></li>
 	  	    		<li><a href="javascript: autoFormatSelection()">Format Selected</a></li>
@@ -189,9 +189,9 @@
 	  	    </section>
 	  	</div>
 
-    {{ Form::open('/', 'POST', array('id' => 'paster')) }}
-    	<textarea id="code" name="paste">{{ $content }}</textarea>
-    {{ Form::close() }}
+    <?php echo  Form::open('/', 'POST', array('id' => 'paster')) ; ?>
+    	<textarea id="code" name="paste"><?php echo  $content ; ?></textarea>
+    <?php echo  Form::close() ; ?>
 
     <script>
 
@@ -222,6 +222,7 @@
 			startingValue += '\n';
 		}
     	editor.setValue(startingValue);
+    	editor.setSelection({line: 1,ch: 0}, {line: 2,ch: 0});
     }
     
     CodeMirror.commands["selectAll"](editor);
@@ -282,7 +283,7 @@
 
 	var hlLine = editor.setLineClass(0, "activeline");
 	</script>
-	{{ HTML::script('http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js') }}
+	<?php echo  HTML::script('http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js') ; ?>
 	<p><div style="height:25px; width:100%;"></div>
 		<dl>
 			<dt>Ctrl-S </dt><dd>Save</dd>
