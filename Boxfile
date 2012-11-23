@@ -18,9 +18,12 @@ web1:
     - eaccelerator
     - memcached
     - curl
+    - sqlite
   before_deploy:
     - "php artisan migrate:install"
     - "php artisan migrate"
   after_deploy:
     - "rm -f storage/cache/*"
     - "rm -f storage/views/*"
+    - "rm -f storage/database"
+    - "touch storage/database/application.sqlite"
