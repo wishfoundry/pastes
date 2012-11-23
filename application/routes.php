@@ -6,8 +6,9 @@
 |--------------------------------------------------------------------------
 |
 | Simply tell Laravel the HTTP verbs and URIs it should respond to. It is a
-| breeze to setup your application using Laravel's RESTful routing and it
-| is perfectly suited for building large applications and simple APIs.
+| breeze to setup your applications using Laravel's RESTful routing, and it
+| is perfectly suited for building both large applications and simple APIs.
+| Enjoy the fresh air and simplicity of the framework.
 |
 | Let's respond to a simple GET request to http://example.com/hello:
 |
@@ -18,7 +19,7 @@
 |
 | You can even respond to more than one URI:
 |
-|		Route::post(array('hello', 'world'), function()
+|		Route::post('hello, world', function()
 |		{
 |			return 'Hello World!';
 |		});
@@ -31,11 +32,76 @@
 |		});
 |
 */
+/*
+|--------------------------------------------------------------------------
+| Display the "new paste" view...
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/', function()
+Route::get('/', array('as' => 'new', 'do' => function ()
 {
-	return View::make('home.index');
+	return View::make('editor')->with('content', ' ')->with('save', 'Save');
+}));
+
+/*
+|--------------------------------------------------------------------------
+| Create a new paste...
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/', function ()
+{
+	$errors = Paste::validate(Input::get());
+
+	if (count($errors) > 0)
+	{
+		return Redirect::to_route('new')->with('errors', $errors);
+	}
+
+	$paste = new Paste(array('paste' => Input::get('paste')));
+
+	$paste->save();
+
+	return Redirect::to_route('paste', array(Math::to_base($paste->id)));
 });
+
+/*
+|--------------------------------------------------------------------------
+| View a raw paste...
+|--------------------------------------------------------------------------
+*/
+
+Route::get('(:any)/raw', array('as' => 'raw', 'do' => function ($id)
+{
+	if ( ! is_null($paste = Paste::find($id = Math::to_base_10($id))))
+	{
+		return Response::make($paste->paste)->header('Content-Type', 'text/plain');
+	}
+
+	return Response::error('404');
+}));
+
+
+/*
+|--------------------------------------------------------------------------
+| View an existing paste...
+|--------------------------------------------------------------------------
+*/
+
+Route::get('(:any)', array('as' => 'paste', 'do' => function ($id)
+{
+	$paste = Paste::find(Math::to_base_10($id));
+
+	if (is_null($paste))
+	{
+		return Response::error('404');
+	}
+
+	return View::make('editor')
+							->with('content', htmlentities($paste->paste))
+						    ->with('id', $id)
+						    ->with('save', 'Save As');
+}));
 
 /*
 |--------------------------------------------------------------------------
@@ -68,9 +134,9 @@ Event::listen('500', function()
 |--------------------------------------------------------------------------
 |
 | Filters provide a convenient method for attaching functionality to your
-| routes. The built-in before and after filters are called before and
-| after every request to your application, and you may even create
-| other filters that can be attached to individual routes.
+| routes. The built-in "before" and "after" filters are called before and
+| after every request to your application, and you may even create other
+| filters that can be attached to individual routes.
 |
 | Let's walk through an example...
 |
