@@ -164,8 +164,6 @@
 		function createPaste() {
 			$("#paster").submit();
 		}
-		
-
 	</script>
   	    <nav>
   	    	<h1><a href="http://laravel.com">Laravel</a></h1>
@@ -178,7 +176,7 @@
   	    <div id="tool-cont">
   	    	<section id="toolbar">
 	  	    	<ul>
-	  	    		<?php if ( $save == 'Save As' ): ?>
+	  	    		<?php if( $save == 'Save As' ): ?>
 					<li><a href="/<?php echo  $id ; ?>/raw">View Raw</a></li>
 					<?php endif; ?>
 	  	    		<li><a href="javascript: nextKey()" id="key">keys: default</a></li>
