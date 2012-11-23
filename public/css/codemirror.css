@@ -51,7 +51,7 @@
   position: absolute; left: 0; top: 0;
   z-index: 10;
   background-color: #1B1B1B;
-  border-right: 1px solid #FC580C;
+  border-right: 1px solid #B86D4A;
   min-width: 2em;
   height: 100%;
 }
@@ -133,18 +133,21 @@ div.CodeMirror-selected { background: #444; }
 /* Default theme */
 
 .cm-s-default span.cm-keyword    { color: #FFA927; }
-.cm-s-default span.cm-atom       { color: #FDCA49; }
+.cm-s-default span.cm-atom       { color: #FDCA49; } 
 .cm-s-default span.cm-number     { color: #FC580C; }
 .cm-s-default span.cm-def        { color: #f92672; }
-.cm-s-default span.cm-variable   { color: #F8F8F0; }
-.cm-s-default span.cm-variable-2 { color: #FFC48C; }
+.cm-s-default span.cm-variable   { color: #F8F8F0; } /*PHP: generic unknown default value */ 
+.cm-s-default span.cm-variable-2 { color: #FFC48C; } /*PHP: anything with $ */ 
 .cm-s-default span.cm-variable-3 { color: #f92672; }
+.cm-s-default span.cm-class      { color: #71C6FF; }
+
+.cm-s-default span.cm-phpStandardFunctions   { color: #FFAA82; }
 .cm-s-default span.cm-property   { color: white; }
 .cm-s-default span.cm-operator   { color: #F38630; }
 .cm-s-default span.cm-comment    { color: #9B8C80; }
 .cm-s-default span.cm-string     { color: #FDCA49; }
 .cm-s-default span.cm-string-2   { color: #f50; }
-.cm-s-default span.cm-meta       { color: #aaa; }
+.cm-s-default span.cm-meta       { color: #f92672; }
 .cm-s-default span.cm-error      { color: #f00; }
 .cm-s-default span.cm-qualifier  { color: #555; }
 .cm-s-default span.cm-builtin    { color: #FC580C; }
@@ -156,8 +159,18 @@ div.CodeMirror-selected { background: #444; }
 .cm-s-default span.cm-hr         { color: #999; }
 .cm-s-default span.cm-link       { color: #f92672; }
 .cm-s-default span.cm-tab { background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=);
-background-position: right;
-background-repeat: no-repeat;}
+    background-position: right;
+    background-repeat: no-repeat;
+}
+span.CodeMirror-matchhighlight { 
+    /*
+    background: #29598D ; 
+    border-left:solid 1px #0AB5EB; 
+    border-right:solid 1px #0AB5EB;
+    */
+    border:solid 1px #0AB5EB;
+    border-radius:4px; 
+}
 
 span.cm-header, span.cm-strong   { font-weight: bold;}
 span.cm-em                       { font-style: italic;}

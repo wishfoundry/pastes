@@ -222,7 +222,6 @@
 			startingValue += '\n';
 		}
     	editor.setValue(startingValue);
-    	editor.setSelection({line: 1,ch: 0}, {line: 2,ch: 0});
     }
     
     CodeMirror.commands["selectAll"](editor);

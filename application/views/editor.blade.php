@@ -164,8 +164,6 @@
 		function createPaste() {
 			$("#paster").submit();
 		}
-		
-
 	</script>
   	    <nav>
   	    	<h1><a href="http://laravel.com">Laravel</a></h1>

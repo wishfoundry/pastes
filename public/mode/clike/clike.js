@@ -5,8 +5,9 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
       blockKeywords = parserConfig.blockKeywords || {},
       atoms = parserConfig.atoms || {},
       hooks = parserConfig.hooks || {},
+      phpStandardFunctions = parserConfig.phpStandardFunctions || {},
       multiLineStrings = parserConfig.multiLineStrings;
-  var isOperatorChar = /[+\-*&%=<>!?|\/]/;
+  var isOperatorChar = parserConfig.operatorChar || /[+\-*&%=<>!?|\/]/;
 
   var curPunc;
 
@@ -16,18 +17,23 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
       var result = hooks[ch](stream, state);
       if (result !== false) return result;
     }
+    // =========================
     if (ch == '"' || ch == "'") {
       state.tokenize = tokenString(ch);
       return state.tokenize(stream, state);
     }
-    if (/[\[\]{}\(\),;\:\.]/.test(ch)) {
+    // =========================
+    if (/[\[\]{}\(\),;]/.test(ch)) {
       curPunc = ch;
       return null;
     }
+    
+    // =========================
     if (/\d/.test(ch)) {
       stream.eatWhile(/[\w\.]/);
       return "number";
     }
+    // =========================
     if (ch == "/") {
       if (stream.eat("*")) {
         state.tokenize = tokenComment;
@@ -38,10 +44,16 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
         return "comment";
       }
     }
+    // =========================
     if (isOperatorChar.test(ch)) {
       stream.eatWhile(isOperatorChar);
       return "operator";
     }
+    if (/[\[\]{}\(\),;\:\.]/.test(ch)) {
+      curPunc = ch;
+      return null;
+    }
+    // =========================
     stream.eatWhile(/[\w\$_]/);
     var cur = stream.current();
     if (keywords.propertyIsEnumerable(cur)) {
@@ -53,6 +65,16 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
       return "builtin";
     }
     if (atoms.propertyIsEnumerable(cur)) return "atom";
+
+    if (phpStandardFunctions.propertyIsEnumerable(cur)) {
+     if (blockKeywords.propertyIsEnumerable(cur)) curPunc = "newstatement";
+     return "phpStandardFunctions"; // Class to apply
+    }
+    if(/[A-Z]/.test(ch))
+    {
+      stream.eatWhile(/[A-Za-z]/);
+      return "class";
+    }
     return "variable";
   }
 
