@@ -125,7 +125,7 @@
       	}
 
 		nav h1 a { 
-	      	background: url(../img/laravel.png) no-repeat;
+	      	background: url(/img/laravel.png) no-repeat;
 			display: block;
 			text-indent: -90000px;
 			height: 43px;
@@ -135,16 +135,14 @@
 		nav {
 			padding: 0;
 			margin:0;
-      		background: #2F3030 url(/img/bg-head.png) repeat-x top left;
-			height: 88px;
 			position: relative;
 	      	width:100%;
 			padding-bottom: 10px;
 		}
 
-		#tool-cont { width:100%; height:20px; text-align: center; margin-bottom: 6px; }
-		#toolbar { margin-left:auto; margin-right:auto; width: 580px; display:block; } 
-		#toolbar li { display:inline; float:right; border-left:1px solid #2F3030;}
+		#tool-cont { width:100%; height:40px; text-align: center; margin-bottom: 6px;  }
+		#toolbar { margin: 0 auto 10px auto; /*idth: 580px;*/ display:table; } 
+		#toolbar li { display:inline; float:right; border-left:2px solid #2F3030;}
 		#toolbar li a, 
 		#toolbar li a:visited,
 		#toolbar li select
@@ -157,6 +155,7 @@
 			text-transform:uppercase;
 			font-size:0.8em;
 			font-weight:bold;
+			line-height: 1em;
 		}
 
 		#toolbar li a:hover
@@ -168,12 +167,12 @@
 
 		#toolbar li:first-child a
 		{
-			border-radius:0 3px 3px 0;
+			border-radius:0 4px 4px 0;
 		}
 
 		#toolbar li:last-child a
 		{
-			border-radius:3px 0 0 3px;
+			border-radius:4px 0 0 4px;
 			border-right:1px solid #3d3d3d;
 		}
 		select {
@@ -237,17 +236,12 @@
 			$("#paster").submit();
 		}
 	</script>
-  	    <nav>
-  	    	<h1><a href="http://laravel.com">Laravel</a></h1>
-  	    	<ul>
-  	    		<li><a href="/">New</a></li>
-  	    		<li><a href="javascript: createPaste()" id="save"><?php echo  $save ; ?></a></li>
-  	    		<li><a href="http://laravel.com/api/">API Docs</a></li>
-  	    	</ul>
-  	    </nav>
   	    <div id="tool-cont">
+  	    	<a href="http://laravel.com/docs" style="top:0; right:0; position:absolute;margin:3px 20px"><img src="/img/laravel.png"></a>
   	    	<section id="toolbar">
 	  	    	<ul>
+	  	    		<li><a href="javascript: createPaste()" id="save"><?php echo  $save ; ?></a></li>
+  	    			<li><a href="/">New</a></li>
 	  	    		<?php if( $save == 'Save As' ): ?>
 					<li><a href="/<?php echo  $id ; ?>/raw">View Raw</a></li>
 					<?php endif; ?>
@@ -255,18 +249,18 @@
 	  	    		<li>
 	  	    			<label class="select">
 						    <select id="mode-selector">
-						        <option value="application/x-httpd-php-open" selected> Mode: PHP </option>
-						        <option value="text/html">Mode: HTML/MIXED</option>
-						        <option value="text/javascript">Mode: JS</option>
-						        <option value="text/x-mysql">Mode: MYSQL</option>
-						        <option value="text/x-less">Mode: LESS</option>
-						        <option value="text/css">Mode: CSS</option>
+						        <option value="application/x-httpd-php-open" selected>PHP </option>
+						        <option value="text/html">HTML/MIXED</option>
+						        <option value="text/javascript">JS</option>
+						        <option value="text/x-mysql">MYSQL</option>
+						        <option value="text/x-less">LESS</option>
+						        <option value="text/css">CSS</option>
 						    </select>
 						</label>​
 					</li>
 					<li>
-						<label class="select">
-							<select onchange="selectTheme()" id="theme-selector">
+						<label>
+							<select onchange="selectTheme()" id="theme-selector" class="select" style="border-radius:4px 0 0 4px;">
 							    <option selected="">laravel</option>
 							    <option>ambiance</option>
 							    <option>blackboard</option>
@@ -287,7 +281,9 @@
 							</select>
 						</label>
 					</li>
-	  	    		<li><a href="javascript: autoFormatSelection()">Format Selected</a></li>
+					
+  	    			
+	  	    		<!-- <li><a href="javascript: autoFormatSelection()">Format Selected</a></li> -->
 	  	    		
 	  	    		
 	  	    	</ul>
