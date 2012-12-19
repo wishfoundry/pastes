@@ -145,7 +145,7 @@
 
 		#tool-cont { width:100%; height:40px; text-align: center; margin-bottom: 6px;  }
 		#toolbar { margin: 0 auto 10px auto; /*idth: 580px;*/ height:36px; display:table; }
-		#toolbar li { display:inline; float:right; border-left:2px solid #2F3030;}
+		#toolbar li { display:inline; float:right; border-left:1px solid #2F3030;}
 		#toolbar li a, 
 		#toolbar li a:visited,
 		#toolbar li select
@@ -262,13 +262,14 @@
                                   <option value="http://laravel.com/docs/input">Input</option>
                                   <option value="http://laravel.com/docs/validation">Validation</option>
                               </select>
-                          </label>​
+                          </label>
                       </li>
 
 	  	    		<li>
                           <label class="select">
                               <select onchange="toolCommand()" id="tool-selector">
                                   <option value="tools" selected>Tools</option>
+                                  <option value="tools">(not implemented)</option>
                                   <option value="format">Format Selection</option>
                                   <option value="find">Find (ctl+F)</option>
                                   <option value="findnext">Find Next (ctl+G)</option>
