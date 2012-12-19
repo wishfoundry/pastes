@@ -4,8 +4,27 @@
     <meta charset="utf-8">
     <title>Laravel PasteBin</title>
     <link rel="stylesheet" href="/css/codemirror.css">
+    <link rel="stylesheet" href="/css/theme/laravel.css">
+    <link rel="stylesheet" href="/css/theme/monokai.css">
+    <link rel="stylesheet" href="/css/theme/neat.css">
+    <link rel="stylesheet" href="/css/theme/elegant.css">
+    <link rel="stylesheet" href="/css/theme/erlang-dark.css">
+    <link rel="stylesheet" href="/css/theme/night.css">
+    <link rel="stylesheet" href="/css/theme/monokai.css">
+    <link rel="stylesheet" href="/css/theme/cobalt.css">
+    <link rel="stylesheet" href="/css/theme/eclipse.css">
+    <link rel="stylesheet" href="/css/theme/rubyblue.css">
+    <link rel="stylesheet" href="/css/theme/lesser-dark.css">
+    <link rel="stylesheet" href="/css/theme/xq-dark.css">
+    <link rel="stylesheet" href="/css/theme/ambiance.css">
+    <link rel="stylesheet" href="/css/theme/blackboard.css">
+    <link rel="stylesheet" href="/css/theme/vibrant-ink.css">
+    <link rel="stylesheet" href="/css/theme/solarized.css">
+    <link rel="stylesheet" href="/css/theme/twilight.css">
+
     <script src="/js/codemirror.js"></script>
     <!-- extra tools -->
+    <script src="/js/util/matchbrackets.js"></script>
     <script src="/js/util/formatting.js"></script>
     <script src="/js/util/dialog.js"></script>
     <link rel="stylesheet" src="/js/util/dialog.css">
@@ -29,7 +48,7 @@
     <style type="text/css">
 	    body
 		{
-			background-color:#2F3030;
+			background-color:#272822;
 			margin:0;
 			padding:0;
 			font-family:sans-serif;
@@ -123,10 +142,12 @@
 			padding-bottom: 10px;
 		}
 
-		#tool-cont { width:100%; height:20px; text-align: center; }
-		#toolbar { margin-left:auto; margin-right:auto; width: 525px; display:block; } 
-		#toolbar li { display:inline; float:right; }
-		#toolbar li a, #toolbar li a:visited
+		#tool-cont { width:100%; height:20px; text-align: center; margin-bottom: 6px; }
+		#toolbar { margin-left:auto; margin-right:auto; width: 580px; display:block; } 
+		#toolbar li { display:inline; float:right; border-left:1px solid #2F3030;}
+		#toolbar li a, 
+		#toolbar li a:visited,
+		#toolbar li select
 		{
 			display:inline-block;
 			background-color:#444;
@@ -155,6 +176,57 @@
 			border-radius:3px 0 0 3px;
 			border-right:1px solid #3d3d3d;
 		}
+		select {
+		    padding:3px;
+		    margin: 0;
+		    border-radius: 0;
+
+		    background: #f8f8f8;
+		    background-color: #444;
+		    color:#888;
+		    border:none;
+		    outline:none;
+		    display: inline-block;
+		    -webkit-appearance:none;
+		    -moz-appearance:none;
+		    appearance:none;
+		    cursor:pointer;
+		}
+		select > option {}
+
+		/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
+		@media screen and (-webkit-min-device-pixel-ratio:0) {
+		    select {padding-right:18px}
+		}
+
+		label.select {
+			position:relative; 
+			display:inline-block;
+		}
+		label.select:after {
+			content:'<>';
+			font:11px "Consolas", monospace;
+			color:#aaa;
+			-webkit-transform:rotate(90deg);
+			-moz-transform:rotate(90deg);
+			-ms-transform:rotate(90deg);
+			transform:rotate(90deg);
+			right:8px; top:2px;
+			padding:0 0 2px;
+			border-bottom:1px solid #ddd;
+			position:absolute;
+			pointer-events:none;
+		}
+		label.select:before {
+			content:'';
+			right:6px; top:0px;
+			width:20px; height:20px;
+			/*background:#f8f8f8;
+			background-color: #222;*/
+			position:absolute;
+			pointer-events:none;
+			display:block;
+		}​
 
 
     </style>
@@ -180,8 +252,43 @@
 					<li><a href="/{{ $id }}/raw">View Raw</a></li>
 					@endif
 	  	    		<li><a href="javascript: nextKey()" id="key">keys: default</a></li>
-	  	    		<li><a href="javascript: nextMode()" id="syntax">mode: php</a></li>
+	  	    		<li>
+	  	    			<label class="select">
+						    <select id="mode-selector">
+						        <option value="application/x-httpd-php-open" selected> Mode: PHP </option>
+						        <option value="text/html">Mode: HTML/MIXED</option>
+						        <option value="text/javascript">Mode: JS</option>
+						        <option value="text/x-mysql">Mode: MYSQL</option>
+						        <option value="text/x-less">Mode: LESS</option>
+						        <option value="text/css">Mode: CSS</option>
+						    </select>
+						</label>​
+					</li>
+					<li>
+						<label class="select">
+							<select onchange="selectTheme()" id="theme-selector">
+							    <option selected="">laravel</option>
+							    <option>ambiance</option>
+							    <option>blackboard</option>
+							    <option>cobalt</option>
+							    <option>eclipse</option>
+							    <option>elegant</option>
+							    <option>erlang-dark</option>
+							    <option>lesser-dark</option>
+							    <option>monokai</option>
+							    <option>neat</option>
+							    <option>night</option>
+							    <option>rubyblue</option>
+							    <option>solarized dark</option>
+							    <option>solarized light</option>
+							    <option>twilight</option>
+							    <option>vibrant-ink</option>
+							    <option>xq-dark</option>
+							</select>
+						</label>
+					</li>
 	  	    		<li><a href="javascript: autoFormatSelection()">Format Selected</a></li>
+	  	    		
 	  	    		
 	  	    	</ul>
 	  	    </section>
@@ -195,25 +302,39 @@
 
     var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         lineNumbers: true,
+        lineWrapping: true,
         matchBrackets: true,
         mode: "application/x-httpd-php-open",
+        theme: "laravel",
         indentUnit: 4,
         indentWithTabs: true,
         enterMode: "indent",
         tabMode: "shift",
+        autoCloseTags: true,
         extraKeys: {
-				"'>'":    function(cm) { cm.closeTag(cm, '>');   },
-				"'/'":    function(cm) { cm.closeTag(cm, '/');   },
+				//"'>'":    function(cm) { cm.closeTag(cm, '>');   },
+				//"'/'":    function(cm) { cm.closeTag(cm, '/');   },
 				"Ctrl-S": function() { $("#paster").submit(); },
 				"Ctrl-N": function() { window.location = '/'; },
 				"'":      function(editor) { wrapStr(editor, "'", "'");   },
 				"'\"'":   function(editor) { wrapStr(editor, '\"', '\"'); },
 				"[":      function(editor) { wrapStr(editor, "[", "]");   },
-			},
-        onCursorActivity: function() {
-			editor.matchHighlight("CodeMirror-matchhighlight");
-		}
+				"Tab": function(cm) { CodeMirror.commands[cm.getSelection().length ?  "indentMore" : "insertTab"](cm); }, 
+				"Shift-Tab": "indentLess" 
+			}
       });
+
+    var hlLine = editor.addLineClass(0, "background", "activeline");
+
+	editor.on("cursorActivity", function() {
+		editor.matchHighlight("CodeMirror-matchhighlight");
+		var cur = editor.getLineHandle(editor.getCursor().line);
+		if (cur != hlLine) {
+			editor.removeLineClass(hlLine, "background", "activeline");
+			hlLine = editor.addLineClass(cur, "background", "activeline");
+		}
+	});
+
 
 
     function wrapStr(editor, str, str2) {
@@ -225,13 +346,13 @@
 
     if( document.getElementById("save").innerHTML == 'Save'){
 		var startingValue = '';
-		for (var i = 0; i < 29; i++) {
+		for (var i = 0; i < 49; i++) {
 			startingValue += '\n';
 		}
     	editor.setValue(startingValue);
     }
     
-    CodeMirror.commands["selectAll"](editor);
+    //CodeMirror.commands["selectAll"](editor);
 
 
     function getSelectedRange() {
@@ -247,29 +368,34 @@
 		var range = getSelectedRange();
 		editor.commentRange(isComment, range.from, range.to);
 	}
+  
 
 	function changeMode(mode) {
 		editor.setOption('mode', mode);
 	}
 
-	var syntaxes = [
-	    	{ id: 'php',        mime :'application/x-httpd-php-open'},
-	    	{ id: 'html/mixed', mime: 'text/html'},
-	    	{ id: 'js',         mime: 'text/javascript'},
-	    	{ id: 'mysql',      mime: 'text/x-mysql'},
-	    	{ id: 'less',       mime: 'text/x-less'},
-	    	{ id: 'css',        mime: 'text/css'}
-    	];
+	// var syntaxes = [
+	//     	{ id: 'php',        mime :'application/x-httpd-php-open'},
+	//     	{ id: 'html/mixed', mime: 'text/html'},
+	//     	{ id: 'js',         mime: 'text/javascript'},
+	//     	{ id: 'mysql',      mime: 'text/x-mysql'},
+	//     	{ id: 'less',       mime: 'text/x-less'},
+	//     	{ id: 'css',        mime: 'text/css'}
+ //    	];
 
-	var currentMode = 0;
-	function nextMode(){
-		if(currentMode < (syntaxes.length-1) ) { currentMode++; } 
-		else { currentMode = 0; }
+	
 
-		var nm = syntaxes[ currentMode ];
-		changeMode(nm.mime);
-		$('#syntax').html( "mode: "+nm.id );
-	}
+	//=====================================
+
+	function switchMode() {
+			var select = document.getElementById('mode-selector')
+	        var mode = select.options[select.selectedIndex].value;
+	        editor.setOption('mode', mode);
+	    }
+	CodeMirror.on(document.getElementById('mode-selector'), 'change', switchMode);
+
+	//=====================================
+
 
 	var keys = [
 		{ id: 'default', key: ''},
@@ -287,10 +413,25 @@
 	}
 
 
-	var hlLine = editor.setLineClass(0, "activeline");
+
+	var input = document.getElementById("theme-selector");
+	function selectTheme() {
+		var theme = input.options[input.selectedIndex].innerHTML;
+		editor.setOption("theme", theme);
+		}
+	var choice = document.location.search &&
+	           decodeURIComponent(document.location.search.slice(1));
+	if (choice) {
+		input.value = choice;
+		editor.setOption("theme", choice);
+	}
+
+
+
 	</script>
 	{{ HTML::script('http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js') }}
-	<p><div style="height:25px; width:100%;"></div>
+	
+	<!-- <p><div style="height:25px; width:100%;"></div>
 		<dl>
 			<dt>Ctrl-S </dt><dd>Save</dd>
 			<dt>Ctrl-N </dt><dd>New</dd>
@@ -300,7 +441,7 @@
 			<dt>Shift-Ctrl-F / Cmd-Option-F</dt><dd>Replace</dd>
 			<dt>Shift-Ctrl-R / Shift-Cmd-Option-F</dt><dd>Replace all</dd>
 		</dl>
-	</p>
+	</p> -->
      
 		
     
