@@ -44,6 +44,9 @@
 	<script src="/mode/htmlmixed/htmlmixed.js"></script>
 
     <script src="/mode/php/php.js"></script>
+    <script src="/mode/jinja2/jinja2.js"></script>
+    <script src="/mode/coffeescript/coffeescript.js"></script>
+    <script src="/mode/markdown/markdown.js"></script>
 
     <style type="text/css">
 	    body
@@ -255,6 +258,9 @@
 						        <option value="text/x-mysql">MYSQL</option>
 						        <option value="text/x-less">LESS</option>
 						        <option value="text/css">CSS</option>
+						        <option value="jinja2">TWIG</option>
+						        <option value="text/x-coffeescript">COFFEE</option>
+						        <option value="text/x-markdown">MARKDOWN</option>
 						    </select>
 						</label>​
 					</li>
@@ -386,7 +392,11 @@
 	function switchMode() {
 			var select = document.getElementById('mode-selector')
 	        var mode = select.options[select.selectedIndex].value;
-	        editor.setOption('mode', mode);
+	        if(mode == 'jinja2')
+	        {
+	        	editor.setOption('mode', {name: 'jinja2', htmlMode: true});
+	        }
+	        else editor.setOption('mode', mode);
 	    }
 	CodeMirror.on(document.getElementById('mode-selector'), 'change', switchMode);
 
