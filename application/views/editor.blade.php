@@ -128,7 +128,7 @@
       	}
 
 		nav h1 a { 
-	      	background: url(/img/laravel.png) no-repeat;
+	      	background: url('/img/laravel.png') no-repeat;
 			display: block;
 			text-indent: -90000px;
 			height: 43px;
@@ -252,8 +252,8 @@
                     <li><a href="javascript: nextKey()" id="key">keys: default</a></li>
                       <li>
                           <label class="select">
-                              <select id="doc-selector">
-                                  <option value="docs" selected>Docs</option>
+                              <select onchange="goToDoc()" id="doc-selector">
+                                  <option value="http://laravel.com/docs" selected>Docs</option>
                                   <option value="http://laravel.com/docs/database/eloquent">Eloquent</option>
                                   <option value="http://laravel.com/api/source-class-Laravel.Database.Eloquent.Model.html#329">-has_many_and_belongs_to()</option>
                                   <option value="http://laravel.com/docs/routing">Routing</option>
@@ -267,7 +267,7 @@
 
 	  	    		<li>
                           <label class="select">
-                              <select id="tool-selector">
+                              <select onchange="toolCommand()" id="tool-selector">
                                   <option value="tools" selected>Tools</option>
                                   <option value="format">Format Selection</option>
                                   <option value="find">Find (ctl+F)</option>
@@ -299,7 +299,7 @@
 					<li>
                         <label class="select">
 							<select onchange="selectTheme()" id="theme-selector" class="select" style="border-radius:4px 0 0 4px;">
-							    <option selected="">laravel</option>
+							    <option selected>laravel</option>
 							    <option>ambiance</option>
 							    <option>blackboard</option>
 							    <option>cobalt</option>
@@ -330,8 +330,23 @@
 
     {{ Form::open('/', 'POST', array('id' => 'paster')) }}
     	<textarea id="code" name="paste">{{ $content }}</textarea>
+        <input id="doctype" type="hidden" name="doctype" value="{{ $doctype }}">
     {{ Form::close() }}
 
+      <!-- <p><div style="height:25px; width:100%;"></div>
+          <dl>
+              <dt>Ctrl-S </dt><dd>Save</dd>
+              <dt>Ctrl-N </dt><dd>New</dd>
+              <dt>Ctrl-F / Cmd-F</dt><dd>Start searching</dd>
+              <dt>Ctrl-G / Cmd-G</dt><dd>Find next</dd>
+              <dt>Shift-Ctrl-G / Shift-Cmd-G</dt><dd>Find previous</dd>
+              <dt>Shift-Ctrl-F / Cmd-Option-F</dt><dd>Replace</dd>
+              <dt>Shift-Ctrl-R / Shift-Cmd-Option-F</dt><dd>Replace all</dd>
+          </dl>
+      </p> -->
+
+    {{ HTML::script('http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js') }}
+    {{ HTML::script('/js/jquery.cookie.js') }}
     <script>
 
     var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
@@ -409,14 +424,15 @@
 	}
 
 	function switchMode() {
-			var select = document.getElementById('mode-selector')
-	        var mode = select.options[select.selectedIndex].value;
-	        if(mode == 'jinja2')
-	        {
-	        	editor.setOption('mode', {name: 'jinja2', htmlMode: true});
-	        }
-	        else editor.setOption('mode', mode);
-	    }
+        var select = document.getElementById('mode-selector')
+        var mode = select.options[select.selectedIndex].value;
+        if(mode == 'jinja2')
+        {
+            editor.setOption('mode', {name: 'jinja2', htmlMode: true});
+        }
+        else editor.setOption('mode', mode);
+        document.getElementById('doctype').value = mode;
+	}
 	CodeMirror.on(document.getElementById('mode-selector'), 'change', switchMode);
 
 
@@ -435,39 +451,64 @@
 		$('#key').html( "keys: "+key.id );
 	}
 
+    // Doc selector
+    function goToDoc() {
+        var input = document.getElementById("doc-selector");
+        var url = input.options[input.selectedIndex].value;
+        window.location = url;
+    }
 
 
-	var input = document.getElementById("theme-selector");
+    // Tool selector
+    function toolCommand() {}
+
+
+
+	var themeinput = document.getElementById("theme-selector");
+
 	function selectTheme() {
-		var theme = input.options[input.selectedIndex].innerHTML;
+		var theme = themeinput.options[themeinput.selectedIndex].innerHTML;
 		editor.setOption("theme", theme);
-		}
-	var choice = document.location.search &&
-	           decodeURIComponent(document.location.search.slice(1));
-	if (choice) {
-		input.value = choice;
-		editor.setOption("theme", choice);
-	}
+        $.cookie('laravel_theme', theme);
+    }
+
+//	var choice = document.location.search && decodeURIComponent(document.location.search.slice(1));
+//	if (choice) {
+//		themeinput.value = choice;
+//		editor.setOption("theme", choice);
+//	}
+
+    // Set default theme
+    if($.cookie('laravel_theme') == null)
+    {
+        $.cookie('laravel_theme', 'laravel');
+    }
+    else
+    {
+        var val = $.cookie('laravel_theme'), sel = document.getElementById('theme-selector');
+        for(var i, j = 0; i = sel.options[j]; j++) {
+            if(i.value == val) {
+                sel.selectedIndex = j;
+                break;
+            }
+        }
+    }
+    editor.setOption("theme", $.cookie('laravel_theme'));
+
+    // Set default mode
+    var val = document.getElementById('doctype').value
+        , sel = document.getElementById('mode-selector');
+    for(var i, j = 0; i = sel.options[j]; j++) {
+        if(i.value == val) {
+            sel.selectedIndex = j;
+            break;
+        }
+    }
+    switchMode()
 
 
 
 	</script>
-	{{ HTML::script('http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js') }}
-	
-	<!-- <p><div style="height:25px; width:100%;"></div>
-		<dl>
-			<dt>Ctrl-S </dt><dd>Save</dd>
-			<dt>Ctrl-N </dt><dd>New</dd>
-			<dt>Ctrl-F / Cmd-F</dt><dd>Start searching</dd>
-			<dt>Ctrl-G / Cmd-G</dt><dd>Find next</dd>
-			<dt>Shift-Ctrl-G / Shift-Cmd-G</dt><dd>Find previous</dd>
-			<dt>Shift-Ctrl-F / Cmd-Option-F</dt><dd>Replace</dd>
-			<dt>Shift-Ctrl-R / Shift-Cmd-Option-F</dt><dd>Replace all</dd>
-		</dl>
-	</p> -->
-     
-		
-    
 
 
   </body>

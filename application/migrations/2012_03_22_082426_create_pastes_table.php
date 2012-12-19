@@ -12,6 +12,7 @@ class Create_Pastes_Table {
 		Schema::create('pastes', function ($table) {
 			$table->increments('id');
 			$table->text('paste');
+            $table->text('doctype');
 			$table->timestamps();
 		});
 	}

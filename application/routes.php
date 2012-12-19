@@ -40,7 +40,10 @@
 
 Route::get('/', array('as' => 'new', 'do' => function ()
 {
-	return View::make('editor')->with('content', ' ')->with('save', 'Save');
+	return View::make('editor')
+        ->with('content', ' ')
+        ->with('doctype', 'application/x-httpd-php-open')
+        ->with('save', 'Save');
 }));
 
 /*
@@ -58,7 +61,10 @@ Route::post('/', function ()
 		return Redirect::to_route('new')->with('errors', $errors);
 	}
 
-	$paste = new Paste(array('paste' => Input::get('paste')));
+	$paste = new Paste(array(
+        'paste' => Input::get('paste'),
+        'doctype' => Input::get('doctype')
+    ));
 
 	$paste->save();
 
@@ -99,6 +105,7 @@ Route::get('(:any)', array('as' => 'paste', 'do' => function ($id)
 
 	return View::make('editor')
 							->with('content', htmlentities($paste->paste))
+                            ->with('doctype', $paste->doctype)
 						    ->with('id', $id)
 						    ->with('save', 'Save As');
 }));
