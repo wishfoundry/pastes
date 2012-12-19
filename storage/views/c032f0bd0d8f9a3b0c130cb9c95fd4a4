@@ -240,7 +240,7 @@
 		}
 	</script>
   	    <div id="tool-cont">
-  	    	<a href="http://laravel.com/docs" style="top:0; right:0; position:absolute;margin:3px 20px"><img src="/img/laravel.png"></a>
+  	    	<a href="http://laravel.com/docs" style="top:0; right:0; position:absolute;margin:3px 20px"><img src="/img/laravel.png" width="75" height="17px"></a>
   	    	<section id="toolbar">
 	  	    	<ul>
 
