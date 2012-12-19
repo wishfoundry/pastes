@@ -144,7 +144,7 @@
 		}
 
 		#tool-cont { width:100%; height:40px; text-align: center; margin-bottom: 6px;  }
-		#toolbar { margin: 0 auto 10px auto; /*idth: 580px;*/ display:table; } 
+		#toolbar { margin: 0 auto 10px auto; /*idth: 580px;*/ height:36px; display:table; }
 		#toolbar li { display:inline; float:right; border-left:2px solid #2F3030;}
 		#toolbar li a, 
 		#toolbar li a:visited,
@@ -249,6 +249,7 @@
 	  	    		<?php if( $save == 'Save As' ): ?>
 					<li><a href="/<?php echo  $id ; ?>/raw">View Raw</a></li>
 					<?php endif; ?>
+                    <li><a href="javascript: nextKey()" id="key">keys: default</a></li>
                       <li>
                           <label class="select">
                               <select id="doc-selector">
@@ -263,7 +264,7 @@
                               </select>
                           </label>​
                       </li>
-	  	    		<li><a href="javascript: nextKey()" id="key">keys: default</a></li>
+
 	  	    		<li>
                           <label class="select">
                               <select id="tool-selector">
