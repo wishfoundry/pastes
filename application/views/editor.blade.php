@@ -287,7 +287,7 @@
 							</select>
 						</label>
 					</li>
-	  	    		<li><a href="javascript: autoFormatSelection()">Format Selected</a></li>
+	  	    		<!-- <li><a href="javascript: autoFormatSelection()">Format Selected</a></li> -->
 	  	    		
 	  	    		
 	  	    	</ul>
