@@ -255,6 +255,11 @@
                                   <option value="docs" selected>Docs</option>
                                   <option value="http://laravel.com/docs/database/eloquent">Eloquent</option>
                                   <option value="http://laravel.com/api/source-class-Laravel.Database.Eloquent.Model.html#329">-has_many_and_belongs_to()</option>
+                                  <option value="http://laravel.com/docs/routing">Routing</option>
+                                  <option value="http://laravel.com/docs/controllers">Controllers</option>
+                                  <option value="http://laravel.com/docs/loading">Autoloading</option>
+                                  <option value="http://laravel.com/docs/input">Input</option>
+                                  <option value="http://laravel.com/docs/validation">Validation</option>
                               </select>
                           </label>​
                       </li>
@@ -269,6 +274,8 @@
                                   <option value="findprev">Find Prv (ctrl+shf+G)</option>
                                   <option value="replace">Replace (ctl+shf+F)</option>
                                   <option value="replaceall">Replace All (ctl+shf+R)</option>
+                                  <option value="save">Save (ctl+S)</option>
+                                  <option value="save">New (ctl+n)</option>
                               </select>
                           </label>​
                     </li>
