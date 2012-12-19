@@ -243,29 +243,55 @@
   	    	<a href="http://laravel.com/docs" style="top:0; right:0; position:absolute;margin:3px 20px"><img src="/img/laravel.png"></a>
   	    	<section id="toolbar">
 	  	    	<ul>
+
 	  	    		<li><a href="javascript: createPaste()" id="save">{{ $save }}</a></li>
   	    			<li><a href="/">New</a></li>
 	  	    		@if ( $save == 'Save As' )
 					<li><a href="/{{ $id }}/raw">View Raw</a></li>
 					@endif
+                      <li>
+                          <label class="select">
+                              <select id="doc-selector">
+                                  <option value="docs" selected>Docs</option>
+                                  <option value="http://laravel.com/docs/database/eloquent">Eloquent</option>
+                                  <option value="http://laravel.com/api/source-class-Laravel.Database.Eloquent.Model.html#329">-has_many_and_belongs_to()</option>
+                              </select>
+                          </label>​
+                      </li>
 	  	    		<li><a href="javascript: nextKey()" id="key">keys: default</a></li>
 	  	    		<li>
-	  	    			<label class="select">
-						    <select id="mode-selector">
-						        <option value="application/x-httpd-php-open" selected>PHP </option>
-						        <option value="text/html">HTML/MIXED</option>
-						        <option value="text/javascript">JS</option>
-						        <option value="text/x-mysql">MYSQL</option>
-						        <option value="text/x-less">LESS</option>
-						        <option value="text/css">CSS</option>
-						        <option value="jinja2">TWIG</option>
-						        <option value="text/x-coffeescript">COFFEE</option>
-						        <option value="text/x-markdown">MARKDOWN</option>
-						    </select>
-						</label>​
-					</li>
+                          <label class="select">
+                              <select id="tool-selector">
+                                  <option value="tools" selected>Tools</option>
+                                  <option value="format">Format Selection</option>
+                                  <option value="find">Find (ctl+F)</option>
+                                  <option value="findnext">Find Next (ctl+G)</option>
+                                  <option value="findprev">Find Prv (ctrl+shf+G)</option>
+                                  <option value="replace">Replace (ctl+shf+F)</option>
+                                  <option value="replaceall">Replace All (ctl+shf+R)</option>
+                                  <option value="save">Save (ctl+S)</option>
+                                  <option value="save">New (ctl+n)</option>
+                              </select>
+                          </label>​
+                    </li>
+
+                    <li>
+                        <label class="select">
+                            <select id="mode-selector">
+                              <option value="application/x-httpd-php-open" selected>PHP </option>
+                              <option value="text/html">HTML/MIXED</option>
+                              <option value="text/javascript">JS</option>
+                              <option value="text/x-mysql">MYSQL</option>
+                              <option value="text/x-less">LESS</option>
+                              <option value="text/css">CSS</option>
+                              <option value="jinja2">TWIG</option>
+                              <option value="text/x-coffeescript">COFFEE</option>
+                              <option value="text/x-markdown">MARKDOWN</option>
+                            </select>
+                        </label>​
+                    </li>
 					<li>
-						<label>
+                        <label class="select">
 							<select onchange="selectTheme()" id="theme-selector" class="select" style="border-radius:4px 0 0 4px;">
 							    <option selected="">laravel</option>
 							    <option>ambiance</option>
@@ -376,19 +402,6 @@
 		editor.setOption('mode', mode);
 	}
 
-	// var syntaxes = [
-	//     	{ id: 'php',        mime :'application/x-httpd-php-open'},
-	//     	{ id: 'html/mixed', mime: 'text/html'},
-	//     	{ id: 'js',         mime: 'text/javascript'},
-	//     	{ id: 'mysql',      mime: 'text/x-mysql'},
-	//     	{ id: 'less',       mime: 'text/x-less'},
-	//     	{ id: 'css',        mime: 'text/css'}
- //    	];
-
-	
-
-	//=====================================
-
 	function switchMode() {
 			var select = document.getElementById('mode-selector')
 	        var mode = select.options[select.selectedIndex].value;
@@ -399,8 +412,6 @@
 	        else editor.setOption('mode', mode);
 	    }
 	CodeMirror.on(document.getElementById('mode-selector'), 'change', switchMode);
-
-	//=====================================
 
 
 	var keys = [
